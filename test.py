@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 from sklearn import svm,metrics,datasets
 from zipfile import ZipFile
 import pandas as pd
+import csv
 """ #输入数据
 digits=datasets.load_digits()
 digits_images_target=list(zip(digits.images,digits.target))
@@ -25,7 +26,7 @@ fp=myzip.open("test.csv")
 test_data=pd.read_csv(fp,header=None)
 fp.close()
 myzip.close()
-X_train=train_data.iloc[:,:39]
+X_train=train_data.iloc[:,:40]
 Y_train = train_data.iloc[:,40]
 X_test = test_data
 clf=svm.SVC(gamma=0.01)
@@ -33,6 +34,13 @@ clf.fit(X_train,Y_train)
 predicted=clf.predict(X_test)
 print(X_train[:20])
 print(predicted[:20])
+with open("submission.csv", "w", encoding="utf-8", newline="") as f:
+    csv_writer = csv.writer(f)
+    csv_writer.writerow(['Id','Expected'])
+    for i in range(len(predicted)):
+        csv_writer.writerow([i,predicted[i]])
+    print("写入数据成功")
+    f.close()
 """ data=digits.images
 n_samples=len(data)
 data=data.reshape((n_samples,-1))
@@ -47,7 +55,6 @@ predicted=clf.predict(data[n_samples//4:])
 print('Classification report for classifier %s:\n%s\n'%(clf,metrics.classification_report(expect,predicted)))
 print('clf_report Confusion Matrix:\n%s'%metrics.confusion_matrix(expect,predicted))
 fpr, tpr, thresholds = metrics.roc_curve(expect,predicted, pos_label=2)
-
 print('Classification ACU report for classifier %s:\n%s\n'%(clf,metrics.auc(fpr, tpr)))
 #print (predicted)
 #确认验证集的输入和预测值
