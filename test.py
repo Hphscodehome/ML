@@ -29,7 +29,7 @@ myzip.close()
 X_train=train_data.iloc[:,:40]
 Y_train = train_data.iloc[:,40]
 X_test = test_data
-clf=svm.SVC(gamma=0.01)
+clf=svm.SVC(gamma=0.001)
 clf.fit(X_train,Y_train)
 predicted=clf.predict(X_test)
 print(X_train[:20])
